@@ -1,0 +1,165 @@
+/* login.css */
+
+/* 전체 화면을 채우는 스타일 */
+.login-container {
+  background-color: #ffffff; /* 배경색 (이미지와 함께 섞을 수 있음) */
+  background-position: center;
+  background-repeat: no-repeat;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+/* 로고 컨테이너 */
+.logo-container {
+  position: absolute;
+  top: 20px;  /* 타이틀 위로 올리기 위해 위치 조정 */
+  left: 50%;  /* 가로 중앙으로 정렬 */
+  transform: translateX(-50%);  /* 정확히 중앙 정렬 */
+}
+/* 로고 이미지 스타일 */
+.login-logo {
+  width: 200px;  /* 로고 크기 조정 */
+  height: auto;
+}
+
+/* 타이틀 스타일 */
+.login-title {
+  text-align: center;
+  font-weight: 600;
+  font-size: 2rem;
+  margin-top: 80px;  /* 타이틀을 위로 밀어내기 */
+}
+
+/* 로그인 박스 스타일 */
+.login-box {
+  background: rgba(255, 255, 255, 0.50);
+  padding: 30px;
+  border-radius: 12px;
+  border: 2px solid #F9F9F9;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 400px;
+  text-align: center;
+  margin: auto;
+  height: 450px;
+}
+
+/* 타이틀 스타일 */
+.login-title {
+  position: relative;   /* 상대 위치로 설정 */
+  top: 150px;
+  color: #000;
+  font-family: Inter;
+  font-size: 24px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  /* color: #4671c7; */
+  text-align: center;
+}
+.login-Idpwd {
+  margin-top: 30px;
+  margin-bottom: -20px;
+  color: #1E699E;
+  font-family: Inter;
+  font-size: 13px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+}
+.login-Idpwd a {
+  text-decoration: none;
+  color: #1E699E;
+  font-weight: bold;
+}
+
+.login-Idpwd a:hover {
+  text-decoration: underline;
+}
+
+/* 각 TextField 사이의 간격 */
+.login-input {
+  width: 100%;
+  padding: 12px;
+  margin-top: 20px;
+  margin-bottom: 0px;
+  border: 1px solid #ececec;
+  box-shadow: #292929;
+  border-radius: 8px;
+  font-size: 1rem;
+}
+
+/* 로그인 버튼 스타일 */
+.login-button {
+  width: 30%;
+  padding: 12px;
+  background-color: #ffffff;
+  color: #1E699E;
+  border: 1px solid #d6d6d6;
+  font-size: 15px;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  margin-bottom: 20px;
+  margin-top: 30px;
+}
+
+.login-button:hover {
+  background-color: #7EBBE8;
+  border: 1px solid white;
+  color: white;
+}
+
+/* 회원가입 링크 스타일 */
+.signup-link {
+  margin-top: 10px;
+  font-size: 0.9rem;
+}
+
+.signup-link a {
+  text-decoration: none;
+  color: #1E699E;
+  font-weight: bold;
+}
+
+.signup-link a:hover {
+  text-decoration: underline;
+}
+
+/* 버튼 그룹 */
+.button-group {
+  margin-top: 20px;
+  display: flex;
+  justify-content: space-around;
+}
+
+/* 개별 버튼 스타일 */
+.social-button {
+  padding: 10px 20px;
+  border-radius: 50px;
+  border: none;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.social-button:hover {
+  opacity: 0.8;
+}
+
+.social-button.kakao {
+  background-color: #f7e600;
+  color: black;
+}
+
+.social-button.google {
+  background-color: #dc4726;
+  color: white;
+}
+
+.social-button.naver {
+  background-color: #03c75a;
+  color: white;
+}

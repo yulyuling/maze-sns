@@ -1,0 +1,124 @@
+/* 전체 레이아웃 */
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background-color: #f4f4f4;
+}
+
+/* 상단 헤더 */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+  background-color: #ffffff;
+  border-bottom: 1px solid #ddd;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.header .logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.header .logo img {
+  width: 40px; /* 로고 크기 조정 */
+}
+
+.header .logo span {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.header .search-bar {
+  display: flex;
+  align-items: center;
+  border: 1px solid #ddd;
+  padding: 5px 10px;
+  border-radius: 20px;
+  width: 200px;
+}
+
+.header .search-bar input {
+  border: none;
+  outline: none;
+  width: 100%;
+  padding: 5px;
+}
+
+.header .search-bar button {
+  border: none;
+  background-color: #ddd;
+  padding: 5px 10px;
+  border-radius: 20px;
+  cursor: pointer;
+}
+
+.header .search-bar button:hover {
+  background-color: #bbb;
+}
+
+/* 왼쪽 사이드 메뉴 */
+.sidebar {
+  width: 200px;
+  background-color: #ffffff;
+  border-right: 1px solid #ddd;
+  padding-top: 20px;
+  position: fixed;
+  height: 100vh;
+  box-shadow: 2px 0px 5px rgba(0, 0, 0, 0.1);
+}
+
+.sidebar ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.sidebar ul li {
+  padding: 15px;
+  text-align: center;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.sidebar ul li:hover {
+  background-color: #f4f4f4;
+}
+
+.sidebar ul li .icon {
+  font-size: 20px;
+  margin-right: 10px;
+}
+
+/* 사이드바 아이템 */
+.sidebar ul li a {
+  text-decoration: none;
+  color: #333;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  font-size: 16px;
+}
+
+/* 활성화된 메뉴 */
+.sidebar ul li.active {
+  background-color: #ddd;
+}
+
+/* 사이드바 아이콘 */
+.sidebar .menu-item {
+  font-size: 24px;
+  color: #333;
+}
+
+/* 콘텐츠 영역 */
+.main-content {
+  margin-left: 200px; /* 사이드바 너비만큼 공간 띄우기 */
+  padding: 20px;
+  background-color: #fff;
+  min-height: 100vh;
+}
+

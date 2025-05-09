@@ -1,0 +1,78 @@
+/* 전체 레이아웃 */
+.app-container {
+    display: flex;
+  }
+  
+  /* 사이드바 스타일 */
+  .sidebar {
+    width: 200px;
+    background-color: #ffffff;
+    padding-top: 20px;
+    position: fixed;
+    height: 100vh;
+    box-shadow: 2px 0px 5px rgba(0, 0, 0, 0.1);
+    overflow-y: auto;
+  }
+  
+  .sidebar-logo {
+    width: 120px;
+    margin: 0 auto;
+    display: block;
+    margin-bottom: 30px;
+  }
+  
+  .sidebar-menu {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .sidebar-item {
+    padding: 15px;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    font-size: 16px;
+  }
+  
+  .sidebar-item:hover {
+    background-color: #f4f4f4; /* 마우스 호버 시 배경색 변경 */
+  }
+  
+  .sidebar-link {
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #333;
+  }
+  
+  .sidebar-icon {
+    width: 29px;
+    height: 29px;
+  }
+  
+  .sidebar-text {
+    font-size: 16px;
+  }
+  
+  /* 현재 선택된 메뉴 강조 */
+  .sidebar-item.active {
+    background-color: #3498db;  /* 활성화된 메뉴의 배경색 */
+    color: white;
+  }
+  
+  .sidebar-item.active .sidebar-icon {
+    filter: brightness(0) saturate(100%) invert(36%) sepia(49%) saturate(3517%) hue-rotate(161deg) brightness(91%) contrast(91%);
+    /* 활성화된 메뉴 아이콘의 색상 변경 */
+  }
+  
+  /* 콘텐츠 영역 */
+  .main-content {
+    margin-left: 200px;  /* 사이드바 너비만큼 공간 띄우기 */
+    padding: 20px;
+    background-color: #f9f9f9;
+    min-height: 100vh;
+  }
+  
