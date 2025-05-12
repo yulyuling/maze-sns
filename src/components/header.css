@@ -1,0 +1,87 @@
+/* 헤더 전체 레이아웃 */
+.fb-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 20px;
+  background-color: white;
+  width: 100%;
+  /* box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); */
+}
+
+/* 로고 영역 */
+.fb-header-logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.fb-header-logo img {
+  height: 40px;
+  width: auto;
+}
+
+.fb-header-logo span {
+  font-size: 20px;
+  font-weight: bold;
+  color: #333;
+}
+
+/* 검색창 */
+.fb-header-search {
+  flex: 1;
+  max-width: 400px;
+  margin: 0 20px;
+}
+
+.fb-header-search input {
+  width: 100%;
+  padding: 8px 14px;
+  border: 1px solid #f1f1f1;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  border-radius: 20px;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+
+.fb-header-search input:focus {
+  border-color: #ccc; /* MUI 기본 블루 */
+}
+
+/* 로그인 버튼 */
+.fb-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.fb-header-login-btn {
+    display: flex;
+  background-color: #ffffff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  width: 100px;
+  align-items: center;      /* 세로 중앙 정렬 */
+  justify-content: center;
+  gap: 6px;
+  color: #292929;
+  border: none;
+  padding: 6px 12px;
+  font-size: 15px;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  text-align: center;
+}
+
+.fb-header-login-btn:hover{
+  background-color: #c3e7ff;
+}
+
+.fb-login-icon {
+  width: 16px;
+  height: 16px;
+  text-align: center;
+  align-items: center;
+  gap: 6px;
+}

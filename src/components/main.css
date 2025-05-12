@@ -2,7 +2,7 @@
 
 /* Container for the entire layout */
 .main-container {
-    display: flex;
+    /* display: flex; */
     justify-content: space-between;
     padding: 20px;
     font-family: Arial, sans-serif;
@@ -72,18 +72,6 @@
     color: red;
   }
   
-  /* Right section for additional content */
-  .sidebar {
-    width: 30%;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-  }
-  
-  .sidebar img {
-    width: 100%;
-    border-radius: 10px;
-  }
   
   /* Side profile image section */
   .profile-image {

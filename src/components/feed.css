@@ -1,0 +1,142 @@
+/* feed.css */
+.myfeed-container {
+  display: flex;
+  padding: 30px;
+  gap: 30px;
+  margin-top: 80px;
+  width: 100%;
+  border-radius: 3px;
+
+  background-color: #ffffff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.myfeed-profile {
+  padding: 50px;
+  display: flex;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  align-items: center;
+  height: 200px;
+  gap: 15px;
+  margin-bottom: 30px;
+}
+
+.myfeed-avatar {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+}
+
+.myfeed-info h3 {
+  margin: 0;
+}
+.myfeed-info p {
+  margin: 2px 0;
+  font-size: 14px;
+  color: #555;
+}
+.myfeed-info span {
+  font-size: 12px;
+  color: #888;
+}
+
+.myfeed-detail {
+  display: flex;
+  gap: 20px;
+  width: 100%;
+  margin-top: 30px;
+  align-items: stretch;
+  height: 500px;
+}
+
+.myfeed-photo {
+  width: 50%;
+  display: flex;
+  text-align: center;
+  flex-direction: column;
+  align-items: center;
+  flex: 2;
+}
+
+.myfeed-photo img {
+  width: 100%;
+  max-width: 400px;
+  border-radius: 10px;
+}
+
+.myfeed-desc {
+  margin-top: 10px;
+  font-size: 14px;
+  color: #444;
+}
+
+.myfeed-interact {
+  width: 50%;
+  background: #fff;
+  /* border: 1px solid #ddd; */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  padding: 20px;
+  border-radius: 6px;
+  height: fit-content;
+  min-height: 420px;
+  flex: 1;
+  margin: 30px;
+}
+
+.myfeed-icons {
+  font-size: 18px;
+  margin-bottom: 10px;
+}
+
+.myfeed-comment {
+  margin-bottom: 5px;
+  font-size: 14px;
+}
+
+.myfeed-thumbnails {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.myfeed-thumb {
+  width: 100%;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.myfeed-thumb:hover {
+  transform: scale(1.03);
+}
+.feed-layout {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 20px;
+  padding: 0;  /* 상위에서 padding 잡지 않는다면 여기서 조절 */
+  margin-top: 80px;
+  width: 100%;
+  box-sizing: border-box;
+}
+/* 왼쪽 메인 영역 (선택된 피드 등) */
+.myfeed-main {
+  flex: 3;
+  min-width: 0;
+  background-color: #fff;
+  border-radius: 6px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+/* 오른쪽 썸네일 박스 */
+.myfeed-thumbnails-wrapper {
+  flex: 1;
+  max-width: 500px;
+  min-width: 400px;
+  min-height: 730px;
+  margin-left: 30px;
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 6px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}

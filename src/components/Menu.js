@@ -18,7 +18,7 @@ function Menu() {
       {/* 사이드바 영역 */}
       <div className="sidebar">
         <div className="logo">
-          <img src="/path/to/logo.png" alt="Logo" className="sidebar-logo" />
+          <img src="/uploads/icons/menulogo.svg" alt="Logo" className="sidebar-logo" />
         </div>
         <ul className="sidebar-menu">
           {sidebarItems.map(item => (
