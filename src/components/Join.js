@@ -1,10 +1,20 @@
 import './join.css';  // join.css 파일 import
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-
+import { Snackbar, Alert } from '@mui/material';
 
 function Join() {
   const [emailCheckMessage, setEmailCheckMessage] = useState('');
+  const [emailSnackbar, setEmailSnackbar] = useState({
+    open: false,
+    message: '',
+    severity: 'info'
+  });
+  const [passwordSnackbar, setPasswordSnackbar] = useState({
+    open: false,
+    message: '',
+    severity: 'info'
+  });
   const [form, setForm] = useState({
     email: '',
     password: '',
@@ -13,12 +23,103 @@ function Join() {
     userNickname: ''
   });
 
+  const handleCloseEmailSnackbar = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setEmailSnackbar(prev => ({ ...prev, open: false }));
+  };
+
+  const handleClosePasswordSnackbar = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setPasswordSnackbar(prev => ({ ...prev, open: false }));
+  };
+
+  const handleEmailChange = (e) => {
+    const { name, value } = e.target;
+    setForm((prevForm) => ({
+      ...prevForm,
+      [name]: value
+    }));
+  };
+
+  const handleEmailCheck = async () => {
+    const { email } = form;
+    if (!email) {
+      setEmailSnackbar({
+        open: true,
+        message: '이메일을 입력해주세요.',
+        severity: 'warning'
+      });
+      return;
+    }
+
+    try {
+      const response = await fetch(`http://localhost:3005/join/check-email?email=${encodeURIComponent(email)}`);
+      if (!response.ok) {
+        throw new Error('서버 응답이 올바르지 않습니다.');
+      }
+      const data = await response.json();
+      
+      setEmailSnackbar({
+        open: true,
+        message: data.message,
+        severity: data.exists ? 'error' : 'success'
+      });
+      
+    } catch (error) {
+      setEmailSnackbar({
+        open: true,
+        message: '서버 오류가 발생했습니다.',
+        severity: 'error'
+      });
+      console.error('이메일 중복 체크 오류:', error);
+    }
+  };
+
+  const handlePasswordCheck = () => {
+    if (!form.password) {
+      setPasswordSnackbar({
+        open: true,
+        message: '비밀번호를 입력해주세요.',
+        severity: 'warning'
+      });
+      return;
+    }
+    if (!form.confirmPassword) {
+      setPasswordSnackbar({
+        open: true,
+        message: '비밀번호 확인을 입력해주세요.',
+        severity: 'warning'
+      });
+      return;
+    }
+
+    if (form.password === form.confirmPassword) {
+      setPasswordSnackbar({
+        open: true,
+        message: '비밀번호가 일치합니다.',
+        severity: 'success'
+      });
+    } else {
+      setPasswordSnackbar({
+        open: true,
+        message: '비밀번호가 일치하지 않습니다.',
+        severity: 'error'
+      });
+    }
+  };
 
   const navigate = useNavigate();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setForm({ ...form, [name]: value });
+        setForm((prevForm) => ({
+      ...prevForm,
+      [name]: value
+    }));
   };
 
   const handleSubmit = async (e) => {
@@ -28,7 +129,7 @@ function Join() {
       return;
     }
 
-    const res = await fetch('http://localhost:3005/api/join', {
+    const res = await fetch('http://localhost:3005/join', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(form)
@@ -48,15 +149,14 @@ function Join() {
       backgroundSize: '40%', 
       backgroundPosition: '600px 200px',
     }}>
-      
       <div className="logo-container">
         <img src="/uploads/logo2.png" alt="Logo" className="login-logo" />
       </div>
 
-      <form  className="join-box" onSubmit={handleSubmit}>
+      <form className="join-box" onSubmit={handleSubmit}>
         <h4 className="join-title">회원가입</h4>
         
-        <div className="input-group">
+        <div className="input-group" style={{ position: 'relative' }}>
           <input
             type="text"
             name="email"
@@ -66,9 +166,39 @@ function Join() {
             value={form.email}
           />
           <button type="button" className="pwdid-button" onClick={handleEmailCheck}>중복체크</button>
+          <Snackbar 
+            open={emailSnackbar.open} 
+            autoHideDuration={3000} 
+            onClose={handleCloseEmailSnackbar}
+            sx={{ 
+              position: 'absolute',
+              top: '100%',
+              width: '100%',
+              zIndex: 1000
+            }}
+          >
+            <Alert 
+              onClose={handleCloseEmailSnackbar} 
+              severity={emailSnackbar.severity} 
+              sx={{ 
+                width: '100%',
+                backgroundColor: 'rgba(255, 255, 255, 0.9)',
+                color: emailSnackbar.severity === 'error' ? '#d32f2f' : 
+                       emailSnackbar.severity === 'success' ? '#2e7d32' : 
+                       emailSnackbar.severity === 'warning' ? '#ed6c02' : '#0288d1',
+                '& .MuiAlert-icon': {
+                  color: emailSnackbar.severity === 'error' ? '#d32f2f' : 
+                         emailSnackbar.severity === 'success' ? '#2e7d32' : 
+                         emailSnackbar.severity === 'warning' ? '#ed6c02' : '#0288d1'
+                },
+                boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
+                borderRadius: '8px'
+              }}
+            >
+              {emailSnackbar.message}
+            </Alert>
+          </Snackbar>
         </div>
-        {/* 중복체크 결과 표시 */}
-          {emailCheckMessage && <p style={{ fontSize: '14px', color: '#555' }}>{emailCheckMessage}</p>}
         <div>
           <input
             type="password"
@@ -80,7 +210,7 @@ function Join() {
           />
         </div>
 
-        <div>
+        <div style={{ position: 'relative' }}>
           <input
             type="password"
             name="confirmPassword"
@@ -89,7 +219,39 @@ function Join() {
             onChange={handleChange}
             required
           />
-          <button className="pwdid-button">중복체크</button>
+          <button type="button" className="pwdid-button" onClick={handlePasswordCheck}>중복체크</button>
+          <Snackbar 
+            open={passwordSnackbar.open} 
+            autoHideDuration={3000} 
+            onClose={handleClosePasswordSnackbar}
+            sx={{ 
+              position: 'absolute',
+              top: '100%',
+              width: '100%',
+              zIndex: 1000
+            }}
+          >
+            <Alert 
+              onClose={handleClosePasswordSnackbar} 
+              severity={passwordSnackbar.severity} 
+              sx={{ 
+                width: '100%',
+                backgroundColor: 'rgba(255, 255, 255, 0.9)',
+                color: passwordSnackbar.severity === 'error' ? '#d32f2f' : 
+                       passwordSnackbar.severity === 'success' ? '#2e7d32' : 
+                       passwordSnackbar.severity === 'warning' ? '#ed6c02' : '#0288d1',
+                '& .MuiAlert-icon': {
+                  color: passwordSnackbar.severity === 'error' ? '#d32f2f' : 
+                         passwordSnackbar.severity === 'success' ? '#2e7d32' : 
+                         passwordSnackbar.severity === 'warning' ? '#ed6c02' : '#0288d1'
+                },
+                boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
+                borderRadius: '8px'
+              }}
+            >
+              {passwordSnackbar.message}
+            </Alert>
+          </Snackbar>
         </div>
 
         <div>

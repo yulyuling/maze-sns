@@ -1,91 +1,206 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './feed.css';
-
-const mockFeeds = [
-  {
-    id: 1,
-    title: '과제',
-    description: '오늘은 쉰 하루용?',
-    image: '/uploads/sample1.png',
-    likes: 10,
-    comments: [
-      { id: 'user1', text: '귀여워요' },
-      { id: 'user2', text: '세이 정답...' },
-      { id: 'user3', text: '오늘날짜고 오늘도 그거 아닌가?' },
-      { id: 'user4', text: 'ㅋㅋㅋㅋ' },
-    ],
-  },
-  {
-    id: 2,
-    title: '머더',
-    description: '',
-    image: '/uploads/sample2.png',
-    likes: 3,
-    comments: [],
-  },
-  {
-    id: 3,
-    title: '노력글',
-    description: '',
-    image: '/uploads/sample3.png',
-    likes: 5,
-    comments: [],
-  },
-];
+import { getTimeAgo } from './time'; // / 경로는 프로젝트 구조에 맞게 수정
 
 function Feed() {
-  const [selectedFeed, setSelectedFeed] = useState(mockFeeds[0]);
+  const [feeds, setFeeds] = useState([]);
+  const [displayCount, setDisplayCount] = useState(5);
+  const [commentInputs, setCommentInputs] = useState({});
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const userEmail = localStorage.getItem('userEmail');
+
+  useEffect(() => {
+    fetchFeeds();
+  }, []);
+
+  useEffect(() => {
+    setDisplayCount(5);
+  }, [feeds]);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (
+        window.innerHeight + window.scrollY >=
+        document.body.offsetHeight - 100
+      ) {
+        if (displayCount < sortedFeeds.length) {
+          setDisplayCount((prev) => Math.min(prev + 5, sortedFeeds.length));
+        }
+      }
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [displayCount, feeds]);
+
+  const fetchFeeds = async () => {
+    try {
+      const response = await fetch('http://localhost:3005/feed/list');
+      const data = await response.json();
+      if (response.ok) {
+        console.log(data.feeds);
+        setFeeds(data.feeds);
+      } else {
+        setError(data.message || '피드를 불러오는데 실패했습니다.');
+      }
+    } catch (err) {
+      setError('서버 오류가 발생했습니다.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // 공개/비공개, 본인만 볼 수 있게
+  const visibleFeeds = feeds.filter(
+    feed => feed.isPublic === 1 || feed.email === userEmail
+  );
+  const sortedFeeds = [...visibleFeeds].sort(
+    (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+  );
+  const pagedFeeds = sortedFeeds.slice(0, displayCount);
+
+  // 좋아요
+  const handleLike = async (postNo) => {
+    try {
+      const response = await fetch(`http://localhost:3005/feed/like/${postNo}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: userEmail })
+      });
+      if (response.ok) fetchFeeds();
+    } catch (err) {
+      alert('좋아요 처리 실패');
+    }
+  };
+
+  // 댓글 입력 핸들러 (feed별로)
+  const handleCommentInput = (postNo, value) => {
+    setCommentInputs((prev) => ({ ...prev, [postNo]: value }));
+  };
+
+  // 댓글 작성
+  const handleCommentSubmit = async (e, postNo) => {
+    e.preventDefault();
+    const comment = commentInputs[postNo];
+    if (!comment || !comment.trim()) return;
+    try {
+      const response = await fetch(`http://localhost:3005/feed/comment/${postNo}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: userEmail, comment })
+      });
+      if (response.ok) {
+        setCommentInputs((prev) => ({ ...prev, [postNo]: '' }));
+        fetchFeeds();
+      }
+    } catch (err) {
+      alert('댓글 작성 실패');
+    }
+  };
+
+  if (loading) return <div className="feed-loading">로딩 중...</div>;
+  if (error) return <div className="feed-error">{error}</div>;
+  if (visibleFeeds.length === 0) return <div className="feed-empty">표시할 피드가 없습니다.</div>;
 
   return (
-    <div className="feed-layout">
-    <div className="myfeed-main">
-        {/* 왼쪽 영역 (프로필 + 피드 내용) */}
-        <div className="myfeed-left">
-          <div className="myfeed-profile">
-            <img src="/uploads/profile.png" alt="프로필" className="myfeed-avatar" />
-            <div className="myfeed-info">
-              <h3>양파 쿵야</h3>
-              <p>오늘의 일은 내일의 내가 하는 법</p>
-              <span>2025.05.07 15:36</span>
+    <div className="feed-main-list">
+      {feeds.map((feed) => {
+        const isOwner = feed.email === userEmail;
+        return (
+          <div key={feed.postNo} className="feed-main-card">
+            {/* 상단: 프로필/공개설정/작성일 */}
+            <div className="feed-main-profile-row">
+              <img
+                src={feed.profileImage ? `http://localhost:3005${feed.profileImage}` : "/uploads/default-profile.png"}
+                alt="프로필"
+                className="feed-main-avatar"
+              />
+              <div className="feed-main-info">
+                <h3>{feed.userNickname} <span>{getTimeAgo(feed.createdAt)}</span></h3>
+                <p>{feed.bio || ''}</p>
+                <div className={`myfeed-visibility${!isOwner ? ' not-owner' : ''}`}>
+                  {isOwner ? (
+                    <select
+                      value={feed.isPublic}
+                      onChange={async (e) => {
+                        const newValue = Number(e.target.value);
+                        try {
+                          const response = await fetch(`http://localhost:3005/feed/visibility/${feed.postNo}`, {
+                            method: 'PUT',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ isPublic: newValue })
+                          });
+                          if (response.ok) fetchFeeds();
+                        } catch {
+                          alert('공개설정 변경 실패');
+                        }
+                      }}
+                      className="myfeed-visibility-select"
+                    >
+                      <option value={1}>전체공개</option>
+                      <option value={0}>비공개</option>
+                    </select>
+                  ) : (
+                    <span className={`visibility-label ${feed.isPublic ? 'public' : 'private'}`}>
+                      {feed.isPublic ? '전체공개' : '비공개'}
+                    </span>
+                  )}
+                </div>
+              </div>
+            </div>
+            {/* 하단: 사진 | 댓글 */}
+            <div className="feed-main-content-row">
+              {/* 왼쪽: 사진/본문 */}
+              <div
+                className="feed-main-photo"
+                style={{
+                  backgroundImage: `url(${feed.imageUrl})`,
+                  backgroundColor: '#eaf6fd'
+                }}
+              >
+                <div className='feed-main-desc-wrapper'>
+                  <div className="feed-main-desc">{feed.content}</div>
+                </div>
+              </div>
+              {/* 오른쪽: 좋아요/댓글 */}
+              <div className="feed-main-interact">
+                <div className="feed-main-icons">
+                  <button onClick={() => handleLike(feed.postNo)} className="like-button">
+                    ❤️ {feed.likes}
+                  </button>
+                  <span>💬 {feed.comments?.length || 0}</span>
+                </div>
+                <div className="feed-main-comments">
+                  {feed.comments?.map((comment) => (
+                    <div key={comment.commentNo} className="feed-main-comment">
+                      <strong>{comment.userNickname}</strong>: {comment.content}
+                      <span className="comment-date">
+                        {new Date(comment.createdAt).toLocaleString()}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+                <form onSubmit={(e) => handleCommentSubmit(e, feed.postNo)} className="comment-form">
+                  <input
+                    type="text"
+                    value={commentInputs[feed.postNo] || ''}
+                    onChange={(e) => handleCommentInput(feed.postNo, e.target.value)}
+                    placeholder="댓글을 입력하세요..."
+                    className="comment-input"
+                  />
+                  <button type="submit" className="comment-submit">작성</button>
+                </form>
+              </div>
             </div>
           </div>
-
-          <div className="myfeed-detail">
-            <div className="myfeed-photo">
-              <img src={selectedFeed.image} alt={selectedFeed.title} />
-              <div className="myfeed-desc">{selectedFeed.description}</div>
-            </div>
-
-            <div className="myfeed-interact">
-              <div className="myfeed-icons">
-                ❤️ {selectedFeed.likes} &nbsp;&nbsp; 💬 {selectedFeed.comments.length}
-              </div>
-              <div className="myfeed-comments">
-                {selectedFeed.comments.map((c, i) => (
-                  <div key={i} className="myfeed-comment">
-                    <strong>{c.id}</strong>: {c.text}
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-    <div className="myfeed-thumbnails-wrapper"> {/* 오른쪽 썸네일 */}
-        <div className="myfeed-thumbnails">
-          {mockFeeds.map((feed) => (
-            <img
-              key={feed.id}
-              src={feed.image}
-              alt={feed.title}
-              className="myfeed-thumb"
-              onClick={() => setSelectedFeed(feed)}
-            />
-          ))}
-        </div>
-      </div>
-  </div>
+        );
+      })}
+      {displayCount < sortedFeeds.length ? (
+        <div className="feed-loading-more">스크롤하면 더 불러옵니다...</div>
+      ) : (
+        <div className="feed-end">마지막 피드입니다.</div>
+      )}
+    </div>
   );
 }
 

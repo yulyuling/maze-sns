@@ -36,7 +36,7 @@
 /* 로그인 박스 스타일 */
 .login-box {
   background: rgba(255, 255, 255, 0.50);
-  padding: 30px;
+  padding: 40px;  /* 패딩 증가 */
   border-radius: 12px;
   border: 2px solid #F9F9F9;
   box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
@@ -44,7 +44,7 @@
   max-width: 400px;
   text-align: center;
   margin: auto;
-  height: 450px;
+  height: 500px;  /* 높이 증가 */
 }
 
 /* 타이틀 스타일 */
@@ -61,8 +61,8 @@
   text-align: center;
 }
 .login-Idpwd {
-  margin-top: 30px;
-  margin-bottom: -20px;
+  margin-top: 40px;  /* 상단 여백 증가 */
+  margin-bottom: -10px;  /* 하단 여백 조정 */
   color: #1E699E;
   font-family: Inter;
   font-size: 13px;
@@ -84,8 +84,8 @@
 .login-input {
   width: 100%;
   padding: 12px;
-  margin-top: 20px;
-  margin-bottom: 0px;
+  margin-top: 25px;  /* 상단 여백 증가 */
+  margin-bottom: 5px;  /* 하단 여백 추가 */
   border: 1px solid #ececec;
   box-shadow: #292929;
   border-radius: 8px;
@@ -103,8 +103,8 @@
   border-radius: 8px;
   font-weight: bold;
   cursor: pointer;
-  margin-bottom: 20px;
-  margin-top: 30px;
+  margin-bottom: 30px;  /* 하단 여백 증가 */
+  margin-top: 40px;  /* 상단 여백 증가 */
 }
 
 .login-button:hover {

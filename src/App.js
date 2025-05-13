@@ -9,26 +9,32 @@ import MyPage from './components/MyPage';
 import Menu from './components/Menu'; // Menu로 변경
 import MainPage from './components/Main';
 import Header from './components/Header';
+import './App.css';
 
 
 function App() {
   const location = useLocation();
-  const isAuthPage = location.pathname === '/login' || location.pathname === '/join';
+  // 로그인, 회원가입, 메인 페이지에서 헤더와 메뉴 숨김
+  const isAuthPage = location.pathname === '/login' || 
+                    location.pathname === '/join' || 
+                    location.pathname === '/';
 
   return (
     <Box sx={{ display: 'flex' }}>
       <CssBaseline />
-      {/* 로그인/회원가입 페이지가 아닐 때만 Menu를 보여줌 */}
+      {/* 인증 페이지가 아닐 때만 Menu를 보여줌 */}
       {!isAuthPage && <Menu />} 
 
       <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
-      {!isAuthPage && <Header />}
+        {/* 인증 페이지가 아닐 때만 Header를 보여줌 */}
+        {!isAuthPage && <Header />}
         <Routes>
-          <Route path="/" element={<MainPage />} />
+          <Route path="/" element={<Login />} />
+          <Route path="/main" element={<MainPage />} />
           <Route path="/join" element={<Join />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-          <Route path="/mypage" element={<MyPage />} />
+          <Route path="/mypage/*" element={<MyPage />} />
           <Route path="/feed" element={<Feed />} />
         </Routes>
       </Box>

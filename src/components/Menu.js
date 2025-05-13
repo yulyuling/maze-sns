@@ -4,7 +4,7 @@ import './menu.css';  // 스타일 파일
 
 function Menu() {
   const sidebarItems = [
-    { id: 1, label: '홈', icon: '/uploads/icons/home.svg', link: '/' },
+    { id: 1, label: '홈', icon: '/uploads/icons/home.svg', link: '/main' },
     { id: 2, label: '마이페이지', icon: '/uploads/icons/mypage.svg', link: '/mypage' },
     { id: 3, label: '친구', icon: '/uploads/icons/Friend.svg', link: '/friends' },
     { id: 4, label: '인기 급상승', icon: '/uploads/icons/fire.svg', link: '/trending' },
