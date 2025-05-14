@@ -12,6 +12,7 @@ function AccountInfo() {
   });
   const [previewImg, setPreviewImg] = useState(null);
   const [selectedImg, setSelectedImg] = useState(null);
+  const [isPublic, setIsPublic] = useState(true);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -199,17 +200,53 @@ function AccountInfo() {
           <button onClick={() => handleSave('bio')}>변경</button>
         </div>
       </div>
+
+      <div className="mypage-status-box">
+        <div className="mypage-status-row vertical">
+          <span className="mypage-status-label">계정 공개 설정</span>
+          <label className="mypage-switch">
+            <input
+              type="checkbox"
+              checked={isPublic}
+              onChange={() => setIsPublic(v => !v)}
+            />
+            <span className="mypage-slider"></span>
+          </label>
+          <span className="mypage-status-desc">{isPublic ? "공개 상태" : "비공개"}</span>
+        </div>
+        <div className="mypage-status-row">
+          <span className="mypage-status-label">계정 비활성화</span>
+          <button className="mypage-status-btn">변경</button>
+        </div>
+      </div>
     </div>
   );
 }
 
 // 계정 상태 수정 컴포넌트
 function AccountStatus() {
+  // 상태 예시 (스위치, 비밀번호 변경 등)
+  const [isPublic, setIsPublic] = useState(true);
+
   return (
     <div className="mypage-main">
-      <div className="mypage-edit-box">
-        <div className="mypage-edit-title">계정 상태 수정</div>
-        {/* 계정 상태 수정 내용 */}
+      <div className="mypage-status-box">
+        <div className="mypage-status-row vertical">
+          <span className="mypage-status-label">계정 공개 설정</span>
+          <label className="mypage-switch">
+            <input
+              type="checkbox"
+              checked={isPublic}
+              onChange={() => setIsPublic(v => !v)}
+            />
+            <span className="mypage-slider"></span>
+          </label>
+          <span className="mypage-status-desc">{isPublic ? "공개 상태" : "비공개"}</span>
+        </div>
+        <div className="mypage-status-row">
+          <span className="mypage-status-label">계정 비활성화</span>
+          <button className="mypage-status-btn">변경</button>
+        </div>
       </div>
     </div>
   );

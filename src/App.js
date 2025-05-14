@@ -9,6 +9,8 @@ import MyPage from './components/MyPage';
 import Menu from './components/Menu'; // Menu로 변경
 import MainPage from './components/Main';
 import Header from './components/Header';
+import MyFeed from './components/MyFeed';
+import FeedAdd from './components/FeedAdd';
 import './App.css';
 
 
@@ -36,6 +38,8 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/mypage/*" element={<MyPage />} />
           <Route path="/feed" element={<Feed />} />
+          <Route path="/feedadd" element={<FeedAdd />} />
+          <Route path="/myfeed" element={<MyFeed />} />
         </Routes>
       </Box>
     </Box>

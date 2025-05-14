@@ -8,7 +8,7 @@ function Menu() {
     { id: 2, label: '마이페이지', icon: '/uploads/icons/mypage.svg', link: '/mypage' },
     { id: 3, label: '친구', icon: '/uploads/icons/Friend.svg', link: '/friends' },
     { id: 4, label: '인기 급상승', icon: '/uploads/icons/fire.svg', link: '/trending' },
-    { id: 5, label: '피드 게시', icon: '/uploads/icons/add.svg', link: '/feed' },
+    { id: 5, label: '피드 게시', icon: '/uploads/icons/add.svg', link: '/feedadd' },
     { id: 6, label: '내 피드', icon: '/uploads/icons/feed.svg', link: '/myfeed' },
     { id: 7, label: 'DM', icon: '/uploads/icons/msg.svg', link: '/dm' },
   ];
