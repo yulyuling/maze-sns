@@ -161,6 +161,17 @@ function Feed() {
     }
   };
 
+  function renderTags(tags) {
+    if (!tags) return null;
+    try {
+      const arr = JSON.parse(tags);
+      if (Array.isArray(arr)) return arr.join(' ');
+      return tags;
+    } catch {
+      return tags;
+    }
+  }
+
   if (loading) return <div className="feed-loading">로딩 중...</div>;
   if (error) return <div className="feed-error">{error}</div>;
   if (visibleFeeds.length === 0) return <div className="feed-empty">표시할 피드가 없습니다.</div>;
@@ -172,6 +183,7 @@ function Feed() {
         const totalComments =
           (feed.comments?.length || 0) +
           (feed.comments?.reduce((acc, comment) => acc + (comment.replies?.length || 0), 0) || 0);
+        console.log('feed.tag:', feed.tag, typeof feed.tag);
         return (
           <div key={feed.postNo} className="feed-main-card">
             {/* 상단: 프로필/공개설정/작성일 */}
@@ -331,6 +343,21 @@ function Feed() {
             {/* 아래: 본문 */}
             <div className="feed-main-desc-wrapper">
               <div className="feed-main-desc">{feed.content}</div>
+              <div className="feed-main-tags">
+                {(() => {
+                  if (!feed.tag) return null;
+                  let arr = feed.tag;
+                  if (typeof arr === 'string') {
+                    try {
+                      arr = JSON.parse(arr);
+                    } catch {
+                      return feed.tag;
+                    }
+                  }
+                  if (Array.isArray(arr)) return arr.join(' ');
+                  return arr;
+                })()}
+              </div>
             </div>
             
           </div>

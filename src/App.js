@@ -11,6 +11,8 @@ import MainPage from './components/Main';
 import Header from './components/Header';
 import MyFeed from './components/MyFeed';
 import FeedAdd from './components/FeedAdd';
+import UnderConstruction from './components/UnderConstruction';
+import Trending from './components/Trending';
 import './App.css';
 
 
@@ -40,6 +42,10 @@ function App() {
           <Route path="/feed" element={<Feed />} />
           <Route path="/feedadd" element={<FeedAdd />} />
           <Route path="/myfeed" element={<MyFeed />} />
+          <Route path="/underconstruction" element={<UnderConstruction />} />
+          <Route path="/friends" element={<UnderConstruction />} />
+          <Route path="/trending" element={<Trending />} />
+          <Route path="/dm" element={<UnderConstruction />} />
         </Routes>
       </Box>
     </Box>

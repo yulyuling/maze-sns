@@ -1,5 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import './feedadd.css';
+import TextField from '@mui/material/TextField';
+import { useNavigate } from 'react-router-dom';
 
 function FeedAdd() {
   const [selectedColor, setSelectedColor] = useState('');
@@ -7,9 +9,12 @@ function FeedAdd() {
   const [previewImages, setPreviewImages] = useState([]);
   const userEmail = localStorage.getItem('userEmail');
   const [userInfo, setUserInfo] = useState(null);
-  const [tags, setTags] = useState('');
+  const [tagInput, setTagInput] = useState('');
+  const [tags, setTags] = useState([]);
   const [content, setContent] = useState('');
   const [imageFiles, setImageFiles] = useState([]);
+  const fileInputRef = useRef();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const email = localStorage.getItem('userEmail');
@@ -46,7 +51,7 @@ function FeedAdd() {
     const formData = new FormData();
     formData.append('email', email);
     formData.append('content', content);
-    formData.append('tags', tags);
+    formData.append('tags', JSON.stringify(tags));
 
     // 이미지 여러 장 업로드
     for (let i = 0; i < imageFiles.length; i++) {
@@ -60,10 +65,29 @@ function FeedAdd() {
     const data = await res.json();
     if (res.ok) {
       alert('피드가 등록되었습니다!');
-      // 입력값 초기화 등
+      navigate('/main'); // 홈으로 이동
     } else {
       alert(data.message || '피드 등록 실패');
     }
+  };
+
+  const handleTagKeyDown = (e) => {
+    if ((e.key === 'Enter' || e.key === ',') && tagInput.trim()) {
+      e.preventDefault();
+      let newTag = tagInput.trim();
+      // #이 없으면 자동으로 붙이기
+      if (!newTag.startsWith('#')) {
+        newTag = '#' + newTag;
+      }
+      if (newTag.length > 1 && !tags.includes(newTag)) {
+        setTags([...tags, newTag]);
+      }
+      setTagInput('');
+    }
+  };
+
+  const removeTag = (removeIdx) => {
+    setTags(tags.filter((_, idx) => idx !== removeIdx));
   };
 
   return (
@@ -84,24 +108,39 @@ function FeedAdd() {
         </div>
       </div>
       <div className="comment-section">
-        <textarea
+        <div
           className="comment-input"
+          contentEditable
+          suppressContentEditableWarning
+          onInput={e => setContent(e.currentTarget.textContent)}
+          
           placeholder="게시글을 작성해 주세요"
-          value={content}
-          onChange={e => setContent(e.target.value)}
-        />
+        ></div>
       </div>
       <div className="color-selection">
-        <label className="image-upload-label">
+        <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
           <input
             type="file"
-            name="file"
-            multiple
-            accept="image/*"
+            id="image-upload"
+            style={{ display: 'none' }}
+            ref={fileInputRef}
             onChange={handleImageChange}
           />
-          <span className="color-title">이미지 업로드</span>
-        </label>
+          <label htmlFor="image-upload">
+            <button
+              type="button"
+              className="color-title"
+              onClick={() => fileInputRef.current.click()}
+            >
+              이미지 업로드
+            </button>
+          </label>
+          <span style={{ color: '#555', fontSize: '15px' }}>
+            {fileInputRef.current && fileInputRef.current.files.length > 0
+              ? fileInputRef.current.files[0].name
+              : '선택된 파일 없음'}
+          </span>
+        </div>
         <div className="image-preview-row">
           {previewImages.map((img, idx) => (
             <div className="image-preview-box" key={idx}>
@@ -110,13 +149,22 @@ function FeedAdd() {
           ))}
         </div>
       </div>
-      <div className="tag-section">
+      <div className="feedadd-tag-section">
         <input
-          className="tag-input"
+          className="feedadd-tag-input"
           placeholder="태그를 입력하세요 (예: #여행 #맛집)"
-          value={tags}
-          onChange={e => setTags(e.target.value)}
+          value={tagInput}
+          onChange={e => setTagInput(e.target.value)}
+          onKeyDown={handleTagKeyDown}
         />
+        <div className="feedadd-tag-list">
+          {tags.map((tag, idx) => (
+            <span className="feedadd-tag-pill" key={idx}>
+              {tag}
+              <span className="feedadd-tag-remove" onClick={() => removeTag(idx)}>×</span>
+            </span>
+          ))}
+        </div>
       </div>
       <div className="action-buttons">
         <button className="save-btn" onClick={handleSubmit}>등록</button>

@@ -9,7 +9,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-function MyFeed() {
+function Trending() {
   const [feeds, setFeeds] = useState([]);
   const [displayCount, setDisplayCount] = useState(5);
   const [commentInputs, setCommentInputs] = useState({});
@@ -77,11 +77,14 @@ function MyFeed() {
 
   // 공개/비공개, 본인만 볼 수 있게 
   const visibleFeeds = feeds.filter(
-    feed => feed.email === userEmail
+    feed => feed.isPublic === 1 || feed.email === userEmail
   );
-  const sortedFeeds = [...visibleFeeds].sort(
-    (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
-  );
+  const getPopularity = (feed) => {
+    const commentCount = (feed.comments?.length || 0) +
+      (feed.comments?.reduce((acc, c) => acc + (c.replies?.length || 0), 0) || 0);
+    return (feed.likes || 0) + commentCount;
+  };
+  const sortedFeeds = [...visibleFeeds].sort((a, b) => getPopularity(b) - getPopularity(a));
   const pagedFeeds = sortedFeeds.slice(0, displayCount);
 
   // 좋아요
@@ -178,14 +181,25 @@ function MyFeed() {
 
   return (
     <div className="feed-main-list">
-      {visibleFeeds.map((feed) => {
+      {sortedFeeds.map((feed, idx) => {
         const isOwner = feed.email === userEmail;
         const totalComments =
           (feed.comments?.length || 0) +
           (feed.comments?.reduce((acc, comment) => acc + (comment.replies?.length || 0), 0) || 0);
-        console.log('feed.tag:', feed.tag, typeof feed.tag);
+        const popularity = getPopularity(feed);
         return (
           <div key={feed.postNo} className="feed-main-card">
+            {/* 인기 순위와 점수 표시 */}
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10 }}>
+              <span style={{ display: 'flex', alignItems: 'center', fontWeight: 700, fontSize: 20, color: '#1976d2' }}>
+                <svg width="26" height="35" viewBox="0 0 26 35" fill="#ff6b81" xmlns="http://www.w3.org/2000/svg" style={{ marginRight: 8, verticalAlign: 'middle' }}>
+                  <path d="M13 35C20.1803 35 26 30.625 26 22.9688C26 19.6875 24.9167 14.2188 20.5833 9.84375C21.125 13.125 17.875 14.2188 17.875 14.2188C19.5 8.75 15.1667 1.09375 8.66667 0C9.44017 4.375 9.75 8.75 4.33333 13.125C1.625 15.3125 0 19.0947 0 22.9688C0 30.625 5.81967 35 13 35ZM13 32.8125C9.40983 32.8125 6.5 30.625 6.5 26.7969C6.5 25.1562 7.04167 22.4219 9.20833 20.2344C8.9375 21.875 10.8333 22.9688 10.8333 22.9688C10.0208 20.2344 11.9167 15.8594 15.1667 15.3125C14.7788 17.5 14.625 19.6875 17.3333 21.875C18.6875 22.9688 19.5 24.8587 19.5 26.7969C19.5 30.625 16.5902 32.8125 13 32.8125Z" fill="#ff6b81"/>
+                </svg>
+                지금 인기 있는
+              {/* <span style={{ color: 'gray', fontSize: 15, marginLeft: 5 }}>({popularity}점)</span> */}
+              </span>
+              <span style={{ fontWeight: 600, fontSize: 16, color: '#ff6b81' }}>#{idx + 1} 인기</span>
+            </div>
             {/* 상단: 프로필/공개설정/작성일 */}
             <div className="feed-main-profile-row">
               <img
@@ -445,4 +459,4 @@ function MyFeed() {
   );
 }
 
-export default MyFeed;
+export default Trending;

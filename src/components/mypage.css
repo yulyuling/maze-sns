@@ -25,6 +25,7 @@
   border: 1px solid #eee;
   border-radius: 8px;
   padding: 30px 30px 20px 30px;
+  width: 800px;
   margin-bottom: 30px;
 }
 
@@ -71,6 +72,14 @@
   color: #666;
   font-size: 13px;
   margin-top: 10px;
+}
+
+.profile-edit-row {
+  display: flex;
+  flex-direction: row;
+  gap: 40px;
+  align-items: flex-start;
+  margin-bottom: 40px;
 }
 
 .mypage-edit-box {
@@ -212,8 +221,121 @@
   color: #7EBBE8;
 }
 
+
 .mypage-main {
-  flex: 1;
-  padding-left: 30px;
+  /* display: flex; */
+  justify-content: flex-star;
+  align-items: flex-start;
+  min-height: 300px;
+  padding: 40px 0;
   min-width: 0;
+  padding-left: 30px;
+}
+/* 
+.mypage-status-box {
+  background: #fff;
+  border-radius: 18px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+  padding: 40px 48px;
+  min-width: 320px;
+  display: flex;
+  flex-direction: column;
+  gap: 36px;
+} */
+
+.mypage-status-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 18px;
+  margin-bottom: 8px;
+}
+.mypage-status-row.vertical {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.mypage-status-label {
+  font-size: 18px;
+  color: #222;
+  font-weight: 500;
+  margin-bottom: 2px;
+}
+
+.mypage-status-desc {
+  display: block;
+  font-size: 15px;
+  color: #bdbdbd;
+  margin-top: 2px;
+  margin-left: 2px;
+  transition: color 0.2s;
+  margin-bottom: 30px;
+}
+.mypage-status-desc.private {
+  color: #b44d4d;
+}
+
+/* 스위치 토글 */
+.mypage-switch {
+  position: relative;
+  display: inline-block;
+  width: 48px;
+  height: 28px;
+  margin: 0 0 0 8px;
+}
+.mypage-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+.mypage-slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: #e0e0e0;
+  border-radius: 18px;
+  transition: background 0.2s;
+  box-shadow: 0 2px 6px rgba(30, 105, 158, 0.08);
+}
+.mypage-switch input:checked + .mypage-slider {
+  background: #7EBBE8;
+}
+.mypage-slider:before {
+  content: "";
+  position: absolute;
+  left: 4px;
+  top: 4px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #fff;
+  transition: transform 0.2s;
+  box-shadow: 0 1px 4px rgba(30, 105, 158, 0.10);
+}
+.mypage-switch input:checked + .mypage-slider:before {
+  transform: translateX(20px);
+}
+
+/* 비활성화 버튼 */
+.mypage-status-btn {
+  background: #7EBBE8;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 32px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s, box-shadow 0.2s;
+  box-shadow: 0 2px 8px rgba(126, 187, 232, 0.10);
+}
+.mypage-status-btn:hover {
+  background: #1e699e;
+}
+
+.profile-edit-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 32px;
 }
