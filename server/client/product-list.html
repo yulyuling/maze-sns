@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+	<script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+	<title>첫번째 페이지</title>
+</head>
+<style>
+    table, tr, td, th{
+        border : 1px solid black;
+        border-collapse: collapse;
+        padding : 5px 10px;
+        text-align: center;
+    }
+</style>
+<body>
+	<div id="app">
+		<table>
+            <tr>
+                <th>번호</th>
+                <th>제품명</th>
+                <th>가격</th>
+                <th>종류</th>
+                <th>재고</th>
+                <template v-if="user.sessionStatus == 'A'">
+                    <th>수정</th>
+                    <th>삭제</th>
+                </template>
+            </tr>
+            <tr v-for="item in list">
+                <td>{{item.productId}}</td>
+                <td>
+                    <a href="javascript:;" @click="fnView(item.productId)">{{item.productName}}</a>
+                </td>
+                <td>{{item.price}}</td>
+                <td>{{item.category}}</td>
+                <td>{{item.stock}}</td>
+                <template v-if="user.sessionStatus == 'A'">
+                    <td><button @click="fnEdit(item.productId)">수정</button></td>
+                    <td><button @click="fnRemove(item.productId)">삭제</button></td>
+                </template>
+            </tr>
+        </table>
+        <div>
+            <span v-if="page != 1"><a href="javascript:;" @click="page--; fnGetList()"><</a></span>
+            <span v-for="num in index">
+                <a href="javascript:;" @click="page=num; fnGetList()">{{num}}</a>
+            </span>
+            <span v-if="page != index"><a href="javascript:;" @click="page++; fnGetList()">></a></span>
+        </div>
+        <a href="product-add.html"><button>등록</button></a>
+        <div style="margin-top : 300px"></div>
+	</div>
+</body>
+</html>
+<script>
+    const app = Vue.createApp({
+        data() {
+            return {
+                list : [],
+                pageSize : 5, // 한페이지에 보여줄 개수
+                page : 1, // 현재 페이지
+                index : 1, // 전체 페이지
+                user : {}
+            };
+        },
+        methods: {
+            fnGetList(){
+                let self = this;
+                let offset = (self.page-1) * self.pageSize;
+                let params = "?pageSize="+self.pageSize+"&offset="+offset;
+				fetch("http://localhost:3000/product"+params)
+                    .then( res => res.json() )
+                    .then( data => {
+                        self.list = data.list;
+                        // 전체 페이지 수
+                        self.index = Math.ceil(data.count/self.pageSize)
+                    } )
+            },
+            fnView(productId){
+                location.href="product-view.html?productId="+productId;
+            },
+            fnRemove(productId){
+                let self = this;
+                fetch("http://localhost:3000/product/"+productId, {
+                    method : "DELETE"
+                })
+                    .then( res => res.json())
+                    .then( data => {
+                        alert(data.message);
+                        self.fnGetList();
+
+                    })
+            },
+            fnEdit(productId){
+                location.href="product-add.html?productId="+productId;
+            }
+        },
+        mounted() {
+            var self = this;
+            fetch("http://localhost:3000/user/info", {
+                method : "GET",
+                credentials : "include"
+            })
+            .then( res=>res.json() )
+            .then( data => {
+                console.log(data);
+                if(!data.isLogin){
+                    alert("로그인 해라");
+                    location.href="login.html";
+                } else {
+                    self.user = data.user;
+                    self.fnGetList();
+                }
+            })
+
+            
+        }
+    });
+    app.mount('#app');
+</script>

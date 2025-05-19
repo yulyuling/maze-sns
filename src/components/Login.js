@@ -77,8 +77,8 @@ function Login() {
   return (
     <div className="login-container"
       style={{ backgroundImage: "url('/uploads/login.png')",
-      backgroundSize: '35%', 
-      backgroundPosition: '550px 300px',
+      backgroundSize: '45%', 
+      backgroundPosition: '650px 350px',
     }}>
 
       <div className="logo-container">

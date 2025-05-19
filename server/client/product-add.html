@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+	<script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+	<title>첫번째 페이지</title>
+</head>
+<style>
+    table, tr, td, th{
+        border : 1px solid black;
+        border-collapse: collapse;
+        padding : 5px 10px;
+        text-align: center;
+    }
+</style>
+<body>
+	<div id="app">
+		<div>제품명 : <input v-model="info.productName"></div>
+        <div>제품설명 : <input v-model="info.description"></div>
+        <div>가격 : <input v-model="info.price"></div>
+        <div>재고 : <input v-model="info.stock"></div>
+        <div>종류 : <input v-model="info.category"></div>
+        <div>파일업로드 : <input type="file" @change="fnFileChange"></div>
+        <div>
+            <button v-if="productId == ''" @click="fnAdd">등록</button>
+            <button v-else @click="fnEdit">수정</button>
+        </div>
+	</div>
+</body>
+</html>
+<script>
+    const app = Vue.createApp({
+        data() {
+            return {
+                info : {
+                    productName : "",
+                    description : "", 
+                    price : "",
+                    stock : "",
+                    category : ""
+                },
+                productId : "",
+                selectedFile : ""
+            };
+        },
+        methods: {
+            fnAdd(){
+                let self = this;
+				fetch("http://localhost:3000/product", {
+                    method : "POST",
+                    headers : {
+                        "Content-type" : "application/json"   
+                    },
+                    body : JSON.stringify(self.info)
+                })
+                    .then( res => res.json() )
+                    .then( data => {
+                        console.log(data);
+                        if (self.selectedFile) {
+                            self.fnUploadFile(data.result.insertId);
+                        }
+                        
+                    } )
+                    .catch( err => {
+                        console.log("서버 에러");
+                    })
+            },
+            fnGetInfo(){
+                let self = this;
+				fetch("http://localhost:3000/product/"+self.productId)
+                    .then( res => res.json() )
+                    .then( data => {
+                        self.info = data.info;
+                        console.log(data.info);
+                    } )
+            },
+            fnEdit(){
+                let self = this;
+				fetch("http://localhost:3000/product/" + self.productId, {
+                    method : "PUT",
+                    headers : {
+                        "Content-type" : "application/json"   
+                    },
+                    body : JSON.stringify(self.info)
+                })
+                    .then( res => res.json() )
+                    .then( data => {
+                        alert(data.message);
+                        location.href="product-list.html"
+                    } )
+                    .catch( err => {
+                        console.log("서버 에러");
+                    })
+            },
+            fnFileChange() {
+                let self = this;
+                self.selectedFile = event.target.files[0];
+            },
+
+            fnUploadFile(productId) {
+                let self = this;
+				const formData = new FormData();
+				formData.append("file", self.selectedFile); 
+                formData.append("productId", productId);
+				fetch("http://localhost:3000/product/upload", {
+					method: "POST",
+					body: formData
+				})
+				.then(res => res.json())
+				.then(data => {
+					console.log(data);
+				})
+				.catch(err => {
+					console.error(err);
+				});
+			}
+        },
+        mounted() {
+            var self = this;
+            const queryParams = new URLSearchParams(window.location.search);
+            // console.log(queryParams.get('productId'));
+            if(queryParams.get('productId') != null){
+                this.productId = queryParams.get('productId') || ''; 
+                self.fnGetInfo();
+            }
+        }
+    });
+    app.mount('#app');
+</script>
